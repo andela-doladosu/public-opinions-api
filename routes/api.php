@@ -13,6 +13,20 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware(['auth:api'])->group(function () {
+    Route::resource('opinions', 'OpinionController')
+        ->except(['index', 'show', 'create']);
+
+    Route::delete('/users/{id}', 'UserController@delete');
+});
+
+Route::get('/users', function () {
+    return ['users' => []];
+});
+
+Route::post('/users/create', 'Auth\RegisterController@create');
+
+
+Route::get('/opinions', function () {
+    return ['opinions' => ['comments' => []]];
 });
