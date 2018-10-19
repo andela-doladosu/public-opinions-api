@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class AuthTest extends TestCase
 {
+    use RefreshDatabase;
     /**
      * Test opinion post route is protected
      *

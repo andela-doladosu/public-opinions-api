@@ -24,7 +24,7 @@ Route::get('/users', function () {
     return ['users' => []];
 });
 
-Route::post('/users/create', 'Auth\RegisterController@create');
+Route::post('/users/create', 'Auth\RegisterController@register');
 
 
 Route::get('/opinions', function () {
