@@ -214,4 +214,74 @@ class OpinionTest extends TestCase
         $this->assertEquals("updated opinion text", $updatedOpinion->text);
         $this->assertEquals("updated opinion title", $updatedOpinion->title);
     }
+
+    /**
+     * Test a user can delete their own opinions
+     *
+     * @return void
+     */
+    public function testAUserCanDeleteTheirOwnOpinions()
+    {
+        User::truncate();
+        Opinion::truncate();
+        Comment::truncate();
+
+        $email = 'dara@gmail.com';
+        $password = 'pass1234';
+
+        $response = $this->json(
+            'POST',
+            '/api/users/create',
+            [
+                'email' => $email,
+                'name' => 'Dara',
+                'password' => $password,
+                'password_confirmation' => $password
+            ]
+        );
+
+        $response->assertStatus(200);
+        $token = $response->getData()->data->api_token;
+
+        $response = $this->json(
+            'POST',
+            '/api/opinions',
+            [
+                'title' => 'some opinion title',
+                'text' => 'some opinion text'
+            ],
+            [
+                'Authorization' => 'Bearer ' . $token
+            ]
+        );
+
+        $response->assertStatus(200);
+
+        $lastInsertedOpinion = Opinion::latest()->first();
+        $updatedOpinion = Opinion::where('id', $lastInsertedOpinion->id)
+            ->get();
+
+        $this->assertEquals(1, $updatedOpinion->count());
+
+        $response = $this->json(
+            'DELETE',
+            "/api/opinions/$lastInsertedOpinion->id",
+            [],
+            [
+                'Authorization' => 'Bearer ' . $token
+            ]
+        );
+
+        $response->assertStatus(200);
+
+        $response = $this->json(
+            'GET',
+            "/api/opinions/$lastInsertedOpinion->id"
+        );
+
+        $response->assertStatus(200);
+        $updatedOpinion = Opinion::where('id', $lastInsertedOpinion->id)
+            ->get();
+        $this->assertEquals(0, $updatedOpinion->count());
+    }
 }

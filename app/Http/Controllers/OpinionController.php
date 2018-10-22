@@ -135,7 +135,36 @@ class OpinionController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $opinion = Opinion::where(
+            [
+                'id' => $id,
+                'user_id' => \Auth::user()->id
+            ]
+        )->first();
+
+        if ($opinion) {
+            $opinion->comments()->delete();
+
+            if ($opinion->delete()) {
+                return response()->json(
+                    [
+                        'errors' => [],
+                        'data' => [],
+                        'message' => 'User opinion was deleted',
+                    ],
+                    200
+                );
+            }
+        } else {
+            return response()->json(
+                [
+                    'errors' => [],
+                    'data' => [],
+                    'message' => 'Opinion does not exist',
+                ],
+                200
+            );
+        }
     }
 
     /**
