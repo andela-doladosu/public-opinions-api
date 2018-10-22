@@ -120,4 +120,28 @@ class OpinionTest extends TestCase
             )
         );
     }
+
+    /**
+     * Test anyone can view a single opinion
+     *
+     * @return void
+     */
+    public function testAnyoneCanViewASingleOpinion()
+    {
+        $response = $this->json(
+            'GET',
+            '/api/opinions/1'
+        );
+
+        $response->assertStatus(200);
+
+        $opinion = json_decode(
+            json_encode(($response->getData()->data)),
+            true
+        );
+
+        $this->assertArrayHasKey('title', $opinion);
+        $this->assertArrayHasKey('text', $opinion);
+        $this->assertArrayHasKey('comments', $opinion);
+    }
 }

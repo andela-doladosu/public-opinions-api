@@ -30,3 +30,4 @@ Route::post('/users/create', 'Auth\RegisterController@register');
 
 
 Route::get('/opinions', 'OpinionController@index');
+Route::get('/opinions/{id}', 'OpinionController@show');

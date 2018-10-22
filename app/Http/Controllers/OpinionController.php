@@ -72,7 +72,16 @@ class OpinionController extends Controller
      */
     public function show($id)
     {
-        //
+        $opinion = Opinion::with('comments')->find($id);
+
+        return response()->json(
+            [
+                'errors' => [],
+                'data' => $opinion,
+                'message' => '',
+            ],
+            200
+        );
     }
 
     /**
