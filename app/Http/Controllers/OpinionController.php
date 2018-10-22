@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Opinion;
+use App\Http\Requests\OpinionRequest;
 
 class OpinionController extends Controller
 {
@@ -32,9 +34,26 @@ class OpinionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(OpinionRequest $request)
     {
-        return response()->json(['msg' => 'created'], 200);
+        $opinion = array_merge(
+            [
+                'user_id' => \Auth::user()->id
+            ],
+            $request->all()
+        );
+
+        if (Opinion::create($opinion)) {
+            return response()->json(
+                [
+                    'errors' => [],
+                    'data' => [
+                        'message' => 'User opinion has been added'
+                    ],
+                ],
+                200
+            );
+        }
     }
 
     /**
