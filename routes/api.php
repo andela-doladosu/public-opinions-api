@@ -15,9 +15,10 @@ use Illuminate\Http\Request;
 
 Route::middleware(['auth:api'])->group(function () {
     Route::resource('opinions', 'OpinionController')
-        ->except(['index', 'show', 'create']);
+        ->except(['index', 'show']);
 
     Route::delete('/users/{id}', 'UserController@delete');
+    Route::post('/users/logout', 'Auth\LoginController@logout');
 });
 
 Route::get('/users', function () {

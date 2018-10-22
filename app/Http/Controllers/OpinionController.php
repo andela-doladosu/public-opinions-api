@@ -34,7 +34,7 @@ class OpinionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return response()->json(['msg' => 'created'], 200);
     }
 
     /**
