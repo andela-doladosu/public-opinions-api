@@ -144,4 +144,74 @@ class OpinionTest extends TestCase
         $this->assertArrayHasKey('text', $opinion);
         $this->assertArrayHasKey('comments', $opinion);
     }
+
+    /**
+     * Test a user can edit their own opinions
+     *
+     * @return void
+     */
+    public function testAUserCanEditTheirOwnOpinions()
+    {
+        User::truncate();
+        Opinion::truncate();
+        Comment::truncate();
+
+        $email = 'dara@gmail.com';
+        $password = 'pass1234';
+
+        $response = $this->json(
+            'POST',
+            '/api/users/create',
+            [
+                'email' => $email,
+                'name' => 'Dara',
+                'password' => $password,
+                'password_confirmation' => $password
+            ]
+        );
+
+        $response->assertStatus(200);
+        $token = $response->getData()->data->api_token;
+
+        $response = $this->json(
+            'POST',
+            '/api/opinions',
+            [
+                'title' => 'some opinion title',
+                'text' => 'some opinion text'
+            ],
+            [
+                'Authorization' => 'Bearer ' . $token
+            ]
+        );
+
+        $response->assertStatus(200);
+
+        $lastInsertedOpinion = Opinion::latest()->first();
+
+        $response = $this->json(
+            'PUT',
+            "/api/opinions/$lastInsertedOpinion->id",
+            [
+                'title' => 'updated opinion title',
+                'text' => 'updated opinion text'
+            ],
+            [
+                'Authorization' => 'Bearer ' . $token
+            ]
+        );
+
+        $response->assertStatus(200);
+
+        $response = $this->json(
+            'GET',
+            "/api/opinions/$lastInsertedOpinion->id"
+        );
+
+        $response->assertStatus(200);
+        $updatedOpinion = Opinion::find($lastInsertedOpinion->id);
+
+        $this->assertEquals("updated opinion text", $updatedOpinion->text);
+        $this->assertEquals("updated opinion title", $updatedOpinion->title);
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Opinion;
 use App\Comment;
+use Illuminate\Http\Request;
 use App\Http\Requests\OpinionRequest;
 use App\Http\Requests\CommentRequest;
 
@@ -102,9 +103,28 @@ class OpinionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(OpinionRequest $request, $id)
     {
-        //
+        $opinion = Opinion::where(
+            [
+                'id' => $id,
+                'user_id' => \Auth::user()->id
+            ]
+        )->first();
+
+        $opinion->title = $request->title;
+        $opinion->text = $request->text;
+
+        if ($opinion->save()) {
+            return response()->json(
+                [
+                    'errors' => [],
+                    'data' => [],
+                    'message' => 'User opinion has been updated'
+                ],
+                200
+            );
+        }
     }
 
     /**
