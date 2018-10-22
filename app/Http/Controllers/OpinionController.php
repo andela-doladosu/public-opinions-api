@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Opinion;
+use App\Comment;
 use App\Http\Requests\OpinionRequest;
+use App\Http\Requests\CommentRequest;
 
 class OpinionController extends Controller
 {
@@ -99,5 +100,28 @@ class OpinionController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function storeComment(CommentRequest $request)
+    {
+        $comment = $request->all();
+
+        if (Comment::create($comment)) {
+            return response()->json(
+                [
+                    'errors' => [],
+                    'data' => [
+                        'message' => 'User comment has been added'
+                    ],
+                ],
+                200
+            );
+        }
     }
 }

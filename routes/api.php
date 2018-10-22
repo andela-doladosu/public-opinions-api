@@ -19,6 +19,7 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::delete('/users/{id}', 'UserController@delete');
     Route::post('/users/logout', 'Auth\LoginController@logout');
+    Route::post('/opinions/{id}/comments', 'OpinionController@storeComment');
 });
 
 Route::get('/users', function () {
