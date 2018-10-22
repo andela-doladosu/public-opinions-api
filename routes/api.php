@@ -29,6 +29,4 @@ Route::get('/users', function () {
 Route::post('/users/create', 'Auth\RegisterController@register');
 
 
-Route::get('/opinions', function () {
-    return ['opinions' => ['comments' => []]];
-});
+Route::get('/opinions', 'OpinionController@index');

@@ -16,7 +16,15 @@ class OpinionController extends Controller
      */
     public function index()
     {
-        //
+        $opinions = Opinion::all();
+
+        return response()->json(
+            [
+                'errors' => [],
+                'data' => $opinions,
+                'message' => '',
+            ]
+        );
     }
 
     /**
@@ -48,9 +56,8 @@ class OpinionController extends Controller
             return response()->json(
                 [
                     'errors' => [],
-                    'data' => [
-                        'message' => 'User opinion has been added'
-                    ],
+                    'data' => [],
+                    'message' => 'User opinion has been added',
                 ],
                 200
             );
@@ -116,9 +123,8 @@ class OpinionController extends Controller
             return response()->json(
                 [
                     'errors' => [],
-                    'data' => [
-                        'message' => 'User comment has been added'
-                    ],
+                    'data' => [],
+                    'message' => 'User comment has been added',
                 ],
                 200
             );
