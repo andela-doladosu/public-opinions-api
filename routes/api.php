@@ -22,12 +22,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/opinions/{id}/comments', 'OpinionController@storeComment');
 });
 
-Route::get('/users', function () {
-    return ['users' => []];
-});
-
 Route::post('/users/create', 'Auth\RegisterController@register');
-
 
 Route::get('/opinions', 'OpinionController@index');
 Route::get('/opinions/{id}', 'OpinionController@show');

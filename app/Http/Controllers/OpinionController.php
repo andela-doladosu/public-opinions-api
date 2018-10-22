@@ -175,7 +175,12 @@ class OpinionController extends Controller
      */
     public function storeComment(CommentRequest $request)
     {
-        $comment = $request->all();
+        $comment = array_merge(
+            [
+                'user_id' => \Auth::user()->id
+            ],
+            $request->all()
+        );
 
         if (Comment::create($comment)) {
             return response()->json(

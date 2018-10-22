@@ -77,4 +77,48 @@ class UserTest extends TestCase
 
         $response->assertStatus(200);
     }
+
+    /**
+     * Test user can delete their own account
+     *
+     * @return void
+     */
+    public function testUserCanDeleteTheirOwnAccount()
+    {
+        User::truncate();
+
+        $email = 'dara@gmail.com';
+        $password = 'pass1234';
+
+        $response = $this->json(
+            'POST',
+            '/api/users/create',
+            [
+                'email' => $email,
+                'name' => 'Dee',
+                'password' => $password,
+                'password_confirmation' => $password
+            ]
+        );
+
+        $response->assertStatus(200);
+
+        $token = $response->getData()->data->api_token;
+
+        $lastInsertedUser = User::latest()->first();
+        $userCountBeforeDelete = User::all()->count();
+
+        $response = $this->json(
+            'DELETE',
+            "/api/users/$lastInsertedUser->id",
+            [],
+            [
+                'Authorization' => 'Bearer ' . $token
+            ]
+        );
+
+        $userCountAfterDelete = User::all()->count();
+
+        $this->assertNotEquals($userCountBeforeDelete, $userCountAfterDelete);
+    }
 }
