@@ -15,4 +15,13 @@ class Opinion extends Model
         'user_id', 'title', 'text',
     ];
 
+    public function comments()
+    {
+        return $this->hasMany(\App\Comment::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(\App\User::class);
+    }
 }

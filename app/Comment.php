@@ -15,4 +15,8 @@ class Comment extends Model
         'opinion_id', 'text',
     ];
 
+    public function opinion()
+    {
+        return $this->belongsTo(\App\Opinion::class);
+    }
 }

@@ -16,7 +16,7 @@ class OpinionController extends Controller
      */
     public function index()
     {
-        $opinions = Opinion::all();
+        $opinions = Opinion::with('comments')->get();
 
         return response()->json(
             [

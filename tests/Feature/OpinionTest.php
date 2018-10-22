@@ -113,5 +113,11 @@ class OpinionTest extends TestCase
 
         $response->assertStatus(200);
         $this->assertNotEquals(0, count($response->getData()->data));
+        $this->assertArrayHasKey(
+            'comments', json_decode(
+                json_encode($response->getData()->data[0]),
+                true
+            )
+        );
     }
 }
