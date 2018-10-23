@@ -105,9 +105,9 @@ class RegisterController extends Controller
             [
                 'errors' => [],
                 'data' => [
-                    'message' => 'User has been created',
                     'api_token' => $user->api_token
-                ]
+                ],
+                'message' => 'User has been created.',
             ],
             200
         );

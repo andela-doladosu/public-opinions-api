@@ -23,6 +23,6 @@ Route::middleware(['auth:api'])->group(function () {
 });
 
 Route::post('/users/create', 'Auth\RegisterController@register');
-
+Route::post('/users/login', 'Auth\LoginController@login');
 Route::get('/opinions', 'OpinionController@index');
 Route::get('/opinions/{id}', 'OpinionController@show');

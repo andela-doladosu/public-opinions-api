@@ -46,15 +46,49 @@ class LoginController extends Controller
             $user->api_token = null;
             $user->save();
         }
-        \Session::flush();
+
+        return response()->json(
+            [
+                'errors' => [],
+                'data' => [],
+                'message' => 'User has been logged out.',
+            ],
+            200
+        );
+    }
+
+    /**
+     * The user has been authenticated.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  mixed  $user
+     * @return mixed
+     */
+    protected function authenticated(Request $request, $user)
+    {
+        $user->api_token = str_random(60);
+        $user->save();
+
         return response()->json(
             [
                 'errors' => [],
                 'data' => [
-                    'message' => 'User has been logged out.'
-                ]
+                    'api_token' => $user->api_token
+                ],
+                'message' => 'User has been authenticated.',
             ],
             200
         );
+    }
+
+    /**
+     * Send the response after the user was authenticated.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    protected function sendLoginResponse(Request $request)
+    {
+        return $this->authenticated($request, $this->guard()->user());
     }
 }
